@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Delivery Route Planner Map</title>
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""
+  >
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="page">
+    <aside class="sidebar">
+      <p class="eyebrow">Neighborhood Graph</p>
+      <h1>Delivery Route Planner</h1>
+      <p class="summary">
+        This map is the first integration step between your Python search code and a browser UI.
+        It now renders your real neighborhood graph on top of a Leaflet basemap using the same
+        node and edge data your algorithms use.
+      </p>
+
+      <section class="panel">
+        <h2>What You’re Seeing</h2>
+        <ul>
+          <li>Blue circles are graph nodes.</li>
+          <li>Gray lines are road edges.</li>
+          <li>The labels match your Python node IDs.</li>
+          <li>Right now this is an abstract graph view, not a real street basemap yet.</li>
+        </ul>
+      </section>
+
+      <section class="panel">
+        <h2>Next Map Steps</h2>
+        <ul>
+          <li>Click a node to choose a start point.</li>
+          <li>Select delivery stops.</li>
+          <li>Send the selection to a Python solver endpoint.</li>
+          <li>Draw the returned route in a highlighted color.</li>
+        </ul>
+      </section>
+
+      <section class="panel">
+        <h2>Selection</h2>
+        <p class="panel-copy">
+          Click one node to set the start. Click other nodes to toggle them as delivery stops.
+        </p>
+        <div class="selection-block">
+          <p class="selection-label">Start</p>
+          <p class="selection-value" id="selected-start">None selected</p>
+        </div>
+        <div class="selection-block">
+          <p class="selection-label">Stops</p>
+          <ul class="selection-list" id="selected-stops">
+            <li>No stops selected</li>
+          </ul>
+        </div>
+        <div class="selection-block">
+          <p class="selection-label">Optimize For</p>
+          <label class="mode-select-wrap">
+            <select class="mode-select" id="cost-mode">
+              <option value="distance">Distance</option>
+              <option value="time">Time</option>
+            </select>
+          </label>
+        </div>
+        <div class="action-row">
+          <button class="action-button secondary" id="clear-selection" type="button">Clear</button>
+          <button class="action-button" id="solve-route" type="button" disabled>Solve Route</button>
+        </div>
+        <p class="selection-hint" id="selection-hint">
+          Select a start node and at least one stop to prepare a route request.
+        </p>
+      </section>
+
+      <section class="panel">
+        <h2>Route Result</h2>
+        <p class="panel-copy" id="route-summary">
+          No route solved yet.
+        </p>
+        <ul class="selection-list" id="route-order">
+          <li>Delivery order will appear here.</li>
+        </ul>
+      </section>
+
+      <section class="panel">
+        <h2>Nodes</h2>
+        <p class="panel-copy">
+          If map clicks feel unclear, use these buttons to test the same selection logic directly.
+        </p>
+        <p class="node-count">Available nodes: 5</p>
+        <div class="node-button-list">
+          <button class="node-button" data-node-id="Home" type="button">Home</button>
+          <button class="node-button" data-node-id="Library" type="button">Library</button>
+          <button class="node-button" data-node-id="Dunkin" type="button">Dunkin</button>
+          <button class="node-button" data-node-id="Whittier" type="button">Whittier</button>
+          <button class="node-button" data-node-id="Main_Junction" type="button">Main_Junction</button>
+        </div>
+      </section>
+
+      <p class="note" id="status">Loading graph data...</p>
+    </aside>
+
+    <main class="map-shell">
+      <div id="map"></div>
+    </main>
+  </div>
+
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""
+  ></script>
+  <script src="app.js"></script>
+</body>
+</html>
