@@ -166,39 +166,38 @@ li,
   line-height: 1.5;
 }
 
-.node-button-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  min-height: 44px;
+.comparison-grid {
+  display: grid;
+  gap: 10px;
 }
 
-.node-button {
+.comparison-card {
   border: 1px solid var(--border);
-  border-radius: 999px;
-  padding: 8px 12px;
-  background: rgba(255, 255, 255, 0.82);
+  border-radius: 14px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.comparison-card.is-best {
+  border-color: rgba(212, 77, 63, 0.38);
+  background: rgba(212, 77, 63, 0.08);
+}
+
+.comparison-title {
+  margin: 0 0 6px;
   color: var(--ink);
-  font: inherit;
-  font-weight: 600;
-  cursor: pointer;
-  box-shadow: 0 4px 12px rgba(28, 43, 45, 0.06);
+  font-weight: 700;
 }
 
-.node-button.is-start {
-  border-color: #7a1f1f;
-  background: rgba(212, 77, 63, 0.18);
-}
-
-.node-button.is-stop {
-  border-color: #556b2f;
-  background: rgba(122, 163, 60, 0.2);
-}
-
-.node-count {
-  margin: 0 0 10px;
+.comparison-line {
+  margin: 2px 0;
   color: var(--muted);
-  line-height: 1.5;
+  line-height: 1.45;
+}
+
+.comparison-empty {
+  margin: 0;
+  color: var(--muted);
 }
 
 .map-shell {

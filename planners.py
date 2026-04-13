@@ -124,7 +124,8 @@ def brute_force_delivery_route(start, deliveries, pairwise_costs, pairwise_paths
 
     return best_order, best_full_route, best_cost
 
-def a_star_delivery_route(start, deliveries, pairwise_costs, pairwise_paths):
+
+def informed_delivery_route(start, deliveries, pairwise_costs, pairwise_paths, heuristic_fn):
     all_deliveries = frozenset(deliveries)
     start_state = (start, frozenset())
 
@@ -164,7 +165,7 @@ def a_star_delivery_route(start, deliveries, pairwise_costs, pairwise_paths):
             step_cost = pairwise_costs[(current_node, next_delivery)]
             new_g = g + step_cost
             new_remaining = all_deliveries - new_visited
-            h = delivery_heuristic(next_delivery, new_remaining, pairwise_costs)
+            h = heuristic_fn(next_delivery, new_remaining, pairwise_costs)
             new_f = new_g + h
 
             if new_g < best_g.get(new_state, float("inf")):
@@ -175,3 +176,23 @@ def a_star_delivery_route(start, deliveries, pairwise_costs, pairwise_paths):
                 )
 
     return None, [], float("inf"), nodes_expanded
+
+
+def uniform_cost_delivery_route(start, deliveries, pairwise_costs, pairwise_paths):
+    return informed_delivery_route(
+        start,
+        deliveries,
+        pairwise_costs,
+        pairwise_paths,
+        heuristic_fn=lambda current_node, remaining, costs: 0,
+    )
+
+
+def a_star_delivery_route(start, deliveries, pairwise_costs, pairwise_paths):
+    return informed_delivery_route(
+        start,
+        deliveries,
+        pairwise_costs,
+        pairwise_paths,
+        heuristic_fn=delivery_heuristic,
+    )

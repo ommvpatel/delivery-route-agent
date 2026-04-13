@@ -4,11 +4,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const selectedStopsElement = document.getElementById("selected-stops");
   const routeSummaryElement = document.getElementById("route-summary");
   const routeOrderElement = document.getElementById("route-order");
+  const comparisonSummaryElement = document.getElementById("comparison-summary");
+  const comparisonGridElement = document.getElementById("comparison-grid");
   const costModeElement = document.getElementById("cost-mode");
   const clearSelectionButton = document.getElementById("clear-selection");
   const solveRouteButton = document.getElementById("solve-route");
   const selectionHintElement = document.getElementById("selection-hint");
-  const nodeButtonElements = document.querySelectorAll("[data-node-id]");
 
   if (
     !statusElement ||
@@ -16,6 +17,8 @@ document.addEventListener("DOMContentLoaded", () => {
     !selectedStopsElement ||
     !routeSummaryElement ||
     !routeOrderElement ||
+    !comparisonSummaryElement ||
+    !comparisonGridElement ||
     !costModeElement ||
     !clearSelectionButton ||
     !solveRouteButton ||
@@ -68,7 +71,6 @@ document.addEventListener("DOMContentLoaded", () => {
   let selectedStart = null;
   const selectedStops = new Set();
   const nodeMarkers = new Map();
-  const nodeButtons = new Map();
   let solvedRouteLayer = null;
 
   function graphBounds(nodes) {
@@ -104,15 +106,6 @@ document.addEventListener("DOMContentLoaded", () => {
       selectionHintElement.textContent =
         `Ready to solve from ${selectedStart} to ${selectedStops.size} stop(s).`;
     }
-
-    nodeButtons.forEach((button, nodeId) => {
-      button.classList.remove("is-start", "is-stop");
-      if (nodeId === selectedStart) {
-        button.classList.add("is-start");
-      } else if (selectedStops.has(nodeId)) {
-        button.classList.add("is-stop");
-      }
-    });
   }
 
   function applyMarkerStyle(nodeId) {
@@ -171,7 +164,51 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     routeSummaryElement.textContent = "No route solved yet.";
     routeOrderElement.innerHTML = "<li>Delivery order will appear here.</li>";
+    comparisonSummaryElement.textContent =
+      "Solve a route to compare Greedy, UCS, and A* side by side.";
+    comparisonGridElement.innerHTML =
+      '<p class="comparison-empty">No comparison results yet.</p>';
     statusElement.textContent = "Selection cleared.";
+  }
+
+  function renderComparisonResults(result) {
+    const comparisonResults = Array.isArray(result.comparison_results)
+      ? result.comparison_results
+      : [];
+    const bestAlgorithm = result.best_algorithm ?? "Unavailable";
+
+    comparisonSummaryElement.textContent =
+      `Best algorithm for this request: ${bestAlgorithm}. Lower cost is better.`;
+
+    comparisonGridElement.innerHTML = "";
+    if (comparisonResults.length === 0) {
+      comparisonGridElement.innerHTML =
+        '<p class="comparison-empty">Comparison results are unavailable for this solve.</p>';
+      return;
+    }
+
+    comparisonResults.forEach((entry) => {
+      const card = document.createElement("div");
+      card.className = "comparison-card";
+      if (entry.name === bestAlgorithm) {
+        card.classList.add("is-best");
+      }
+
+      const statesText =
+        entry.states_expanded === null ? "n/a" : `${entry.states_expanded}`;
+      const costAboveBestText =
+        entry.cost_above_best === null ? "n/a" : entry.cost_above_best.toFixed(1);
+
+      card.innerHTML = `
+        <p class="comparison-title">${entry.name}</p>
+        <p class="comparison-line">Cost: ${entry.total_cost.toFixed(1)} ${result.cost_unit}</p>
+        <p class="comparison-line">Above best: ${costAboveBestText}</p>
+        <p class="comparison-line">States expanded: ${statesText}</p>
+        <p class="comparison-line">Runtime: ${entry.runtime_ms.toFixed(3)} ms</p>
+        <p class="comparison-line">Order: ${(entry.delivery_order || []).join(" -> ") || "No route"}</p>
+      `;
+      comparisonGridElement.appendChild(card);
+    });
   }
 
   function showSolvedRoute(result) {
@@ -186,7 +223,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }).addTo(map);
 
     routeSummaryElement.textContent =
-      `Solved route cost: ${result.total_cost.toFixed(1)} ${result.cost_unit}. Expanded ${result.states_expanded} delivery states using ${result.cost_mode}.`;
+      `Solved route cost: ${result.total_cost.toFixed(1)} ${result.cost_unit}. Expanded ${result.states_expanded ?? "n/a"} delivery states using ${result.cost_mode}.`;
 
     routeOrderElement.innerHTML = "";
     result.delivery_order.forEach((stop) => {
@@ -198,6 +235,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (result.delivery_order.length === 0) {
       routeOrderElement.innerHTML = "<li>No delivery stops were returned.</li>";
     }
+
+    renderComparisonResults(result);
   }
 
   function drawGraph(graphData) {
@@ -253,15 +292,6 @@ document.addEventListener("DOMContentLoaded", () => {
         `Could not load graph data: ${error.message}`;
     }
   }
-
-  nodeButtonElements.forEach((button) => {
-    const nodeId = button.dataset.nodeId;
-    nodeButtons.set(nodeId, button);
-
-    button.addEventListener("click", () => {
-      handleNodeSelection(nodeId);
-    });
-  });
 
   clearSelectionButton.addEventListener("click", clearSelection);
 
