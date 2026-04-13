@@ -7,7 +7,8 @@ from pathlib import Path
 from socketserver import TCPServer
 from urllib.parse import urlparse
 
-from importer import build_imported_real_neighborhood_graph
+from importer import build_active_graph
+from importer import detect_active_graph_source
 from planners import a_star_delivery_route
 from planners import greedy_delivery_route
 from planners import precompute_pairwise_shortest_paths
@@ -49,7 +50,8 @@ def graph_to_route_geometry(graph, route_nodes):
 
 
 def solve_delivery_route(start, stops, cost_mode="distance"):
-    graph = build_imported_real_neighborhood_graph(cost_mode=cost_mode)
+    source_info = detect_active_graph_source()
+    graph = build_active_graph(cost_mode=cost_mode)
     important_nodes = {start, *stops}
     pairwise_costs, pairwise_paths, _ = precompute_pairwise_shortest_paths(graph, important_nodes)
 
@@ -108,6 +110,7 @@ def solve_delivery_route(start, stops, cost_mode="distance"):
         "cost_unit": "seconds" if cost_mode == "time" else "meters",
         "comparison_results": comparisons,
         "best_algorithm": best_result["name"],
+        "graph_source": source_info,
     }
 
 
@@ -127,8 +130,11 @@ class RoutePlannerHandler(SimpleHTTPRequestHandler):
         parsed = urlparse(self.path)
 
         if parsed.path == "/api/graph":
-            graph = build_imported_real_neighborhood_graph()
-            self.send_json(graph.to_dict())
+            source_info = detect_active_graph_source()
+            graph = build_active_graph()
+            payload = graph.to_dict()
+            payload["graph_source"] = source_info
+            self.send_json(payload)
             return
 
         super().do_GET()
