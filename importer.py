@@ -4,8 +4,23 @@ from pathlib import Path
 from graph import Graph
 
 
-def road_weight(graph, road, cost_mode):
+def road_geometry(graph, road, start_node, end_node):
     geometry = road.get("geometry")
+    if geometry is not None:
+        return geometry
+
+    start_position = graph.get_position(start_node)
+    end_position = graph.get_position(end_node)
+    if start_position is None or end_position is None:
+        return None
+
+    return [
+        [start_position[1], start_position[0]],
+        [end_position[1], end_position[0]],
+    ]
+
+
+def road_weight(graph, geometry, road, cost_mode):
     distance_meters = graph.geometry_length(geometry)
 
     if cost_mode == "time":
@@ -34,16 +49,17 @@ def load_graph_from_road_file(path, cost_mode="distance"):
         if direction == "backward":
             start_node = road["to"]
             end_node = road["from"]
-            geometry = list(reversed(road.get("geometry", [])))
+            base_geometry = road_geometry(graph, road, road["from"], road["to"])
+            geometry = list(reversed(base_geometry)) if base_geometry is not None else None
         else:
             start_node = road["from"]
             end_node = road["to"]
-            geometry = road.get("geometry")
+            geometry = road_geometry(graph, road, start_node, end_node)
 
         graph.add_edge(
             start_node,
             end_node,
-            weight=road_weight(graph, road, cost_mode),
+            weight=road_weight(graph, geometry, road, cost_mode),
             geometry=geometry,
             bidirectional=bidirectional,
             metadata={

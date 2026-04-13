@@ -51,9 +51,79 @@
       "lon": -71.05164860582877
     },
     {
-      "id": "Random Park",
-      "lat": 42.40822271341074,
-      "lon": -71.04292009023894
+      "id": "Random_Park",
+      "lat": 42.40822271341074, 
+      "lon": -71.05856554162875
+    },
+    {
+      "id": "Dunkin_Intersection",
+      "lat": 42.4089519935487, 
+      "lon": -71.05376726008588
+    },
+    {
+      "id": "PCSS_Intersection",
+      "lat": 42.40844538419143, 
+      "lon": -71.0516195164697
+    },
+    {
+      "id": "Cottage_Intersection",
+      "lat": 42.40745594025397, 
+      "lon": -71.05508611933692
+    },
+    {
+      "id": "Cottage_PCSS_Intersection",
+      "lat": 42.40637714130986, 
+      "lon": -71.05200369378421
+    },
+    {
+      "id": "Church_St_Intersection",
+      "lat": 42.40951142815104, 
+      "lon": -71.0560635949323
+    },
+    {
+      "id": "Bucknam_St_Intersection",
+      "lat": 42.40890994648274, 
+      "lon": -71.05930962960119
+    },
+    {
+      "id": "Random_Park_Entrance",
+      "lat": 42.40811562046384, 
+      "lon": -71.05907523636353
+    },
+    {
+      "id": "Intersection1",
+      "lat": 42.40866144332839, 
+      "lon": -71.05548721687512
+    },
+    {
+      "id": "Intersection2",
+      "lat": 42.40786711417127, 
+      "lon": -71.05477201700356
+    },
+    {
+      "id": "Intersection3",
+      "lat": 42.408541628960045,
+      "lon": -71.05412292804449
+    },
+    {
+      "id": "Intersection4",
+      "lat": 42.40594694786316,
+      "lon": -71.05329573208374
+    },
+    {
+      "id": "Intersection5",
+      "lat": 42.406477720635905,
+      "lon": -71.0526949172479
+    },
+    {
+      "id": "Intersection6",
+      "lat": 42.40781255471228,
+      "lon": -71.05178833059925
+    },
+    {
+      "id": "Intersection7",
+      "lat": 42.40765015802022,
+      "lon": -71.05374634323384
     }
 
     
@@ -84,28 +154,186 @@
       ]
     },
     {
-      "id": "junction-dunkin",
+      "id": "junction-cottage",
       "from": "Main_Junction",
+      "to": "Cottage_Intersection",
+      "direction": "both",
+      "speed_kph": 35
+    },
+    {
+      "id": "intersection2-intersection3",
+      "from": "Intersection2",
+      "to": "Intersection3",
+      "direction": "both",
+      "speed_kph": 20
+    },
+    {
+      "id": "intersection3-dunkinintersection",  
+      "from": "Intersection3",
+      "to": "Dunkin_Intersection",
+      "direction": "both",
+      "speed_kph": 20
+    },
+    {
+      "id": "Dunkin_IntersectiontoDunkin",
+      "from": "Dunkin_Intersection",
       "to": "Dunkin",
       "direction": "both",
-      "speed_kph": 35,
+      "speed_kph": 20
+    },
+    {
+      "id": "int2int1",
+      "from": "Intersection2",
+      "to": "Intersection1",
+      "direction": "both",
+      "speed_kph": 20
+    },
+    {
+      "id": "int1churchstint",
+      "from": "Intersection1",
+      "to": "Church_St_Intersection",
+      "direction": "both",
+      "speed_kph": 20
+    },
+    {
+      "id": "BucknamtoRandomInt",
+      "from": "Bucknam_St_Intersection",
+      "to": "Random_Park_Entrance",
+      "direction": "both",
+      "speed_kph": 20
+    },
+    {
+      "id": "RandomInttoRandomPark",
+      "from": "Random_Park_Entrance",
+      "to": "Random_Park",
+      "direction": "forward",
+      "speed_kph": 20
+    },
+    {
+      "id": "RandParktoInt1",
+      "from": "Random_Park",
+      "to": "Intersection1",
+      "direction": "forward",
+      "speed_kph": 20
+    },
+    {
+      "id": "RandEntrancetoMainJunction",
+      "from": "Random_Park_Entrance",
+      "to": "Main_Junction",
+      "direction": "forward",
+      "speed_kph": 20,
       "geometry": [
-        [42.40712571161466, -71.05550242599602],
-        [42.408244000000000, -71.054479000000000],
-        [42.40931637016323, -71.05338889338316]
+        [42.40811562046384, -71.05907523636353],
+       [42.407638345298935, -71.05849488042612],
+       [42.40751177829442, -71.05802574474455],
+       [42.40750178615159, -71.05700627682118],
+       [42.40712571161466, -71.05550242599602]
       ]
     },
     {
-      "id": "home-junction",
+      "id": "HomeInt4",
       "from": "Home",
-      "to": "Main_Junction",
+      "to": "Intersection4",
+      "direction": "both",
+      "speed_kph": 20
+    },
+    {
+      "id": "Int4Int5",
+      "from": "Intersection4",
+      "to": "Intersection5",
       "direction": "both",
       "speed_kph": 20,
       "geometry": [
-        [42.40640672173467, -71.05413549779504],
-        [42.406694000000000, -71.054711000000000],
-        [42.40712571161466, -71.05550242599602]
+        [42.40594694786316, -71.05329573208374],
+        [42.40632542093169, -71.0528306547265],
+        [42.406477720635905, -71.0526949172479]
       ]
+    },
+    {
+      "id": "CottIntInt5",
+      "from": "Cottage_Intersection",
+      "to": "Intersection5",
+      "direction": "forward",
+      "speed_kph": 20
+    },
+    {
+      "id": "Int5CottagePCSS",
+      "from": "Intersection5",
+      "to": "Cottage_PCSS_Intersection",
+      "direction": "forward",
+      "speed_kph": 20
+    },
+    {
+      "id": "CottagePCSSInt6",
+      "from": "Cottage_PCSS_Intersection",
+      "to": "Intersection6",
+      "direction": "both",
+      "speed_kph": 20
+    },
+    {
+      "id": "Int6toPCSS",
+      "from": "Intersection6",
+      "to": "PCSS",
+      "direction": "both",
+      "speed_kph": 20
+    },
+    {
+      "id": "PCSStoPCSSIntersection",
+      "from": "PCSS",
+      "to": "PCSS_Intersection",
+      "direction": "both",
+      "speed_kph": 20
+    },
+    {
+      "id": "PCSSINTtoDunkin",
+      "from": "PCSS_Intersection",
+      "to": "Dunkin_Intersection",
+      "direction": "both",
+      "speed_kph": 20,
+      "geometry": [
+        [42.40844538419143, -71.0516195164697],
+        [42.40867737799134, -71.05312046249962],
+        [42.4089519935487, -71.05376726008588]
+
+      ]
+    },
+    {
+      "id": "Int6toInt7",
+      "from": "Intersection6",
+      "to": "Intersection7",
+      "direction": "both",
+      "speed_kph": 20
+    },
+    {
+      "id": "Int7toInt2",
+      "from": "Intersection7",
+      "to": "Intersection2",
+      "direction": "both",
+      "speed_kph": 20
+    },
+    {
+      
+      "id": "ChurchIntToBucknamSt",
+      "from": "Church_St_Intersection",
+      "to": "Bucknam_St_Intersection",
+      "direction": "both",
+      "speed_kph": 20
+    },
+    {
+      
+      "id": "CottageIntToInt2",
+      "from": "Cottage_Intersection",
+      "to": "Intersection2",
+      "direction": "both",
+      "speed_kph": 20
+    },
+    {
+      
+      "id": "MaintoHome",
+      "from": "Main_Junction",
+      "to": "Home",
+      "direction": "both",
+      "speed_kph": 20
     }
   ]
 }
