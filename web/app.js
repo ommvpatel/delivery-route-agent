@@ -6,6 +6,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const routeOrderElement = document.getElementById("route-order");
   const comparisonSummaryElement = document.getElementById("comparison-summary");
   const comparisonGridElement = document.getElementById("comparison-grid");
+  const graphSourceLabelElement = document.getElementById("graph-source-label");
+  const graphSourcePathElement = document.getElementById("graph-source-path");
   const costModeElement = document.getElementById("cost-mode");
   const clearSelectionButton = document.getElementById("clear-selection");
   const solveRouteButton = document.getElementById("solve-route");
@@ -19,6 +21,8 @@ document.addEventListener("DOMContentLoaded", () => {
     !routeOrderElement ||
     !comparisonSummaryElement ||
     !comparisonGridElement ||
+    !graphSourceLabelElement ||
+    !graphSourcePathElement ||
     !costModeElement ||
     !clearSelectionButton ||
     !solveRouteButton ||
@@ -72,6 +76,19 @@ document.addEventListener("DOMContentLoaded", () => {
   const selectedStops = new Set();
   const nodeMarkers = new Map();
   let solvedRouteLayer = null;
+
+  function updateGraphSource(sourceInfo) {
+    if (!sourceInfo) {
+      graphSourceLabelElement.textContent = "Unknown";
+      graphSourcePathElement.textContent = "No graph source metadata available.";
+      return;
+    }
+
+    graphSourceLabelElement.textContent = sourceInfo.label ?? sourceInfo.type ?? "Unknown";
+    graphSourcePathElement.textContent = sourceInfo.path
+      ? `Loaded from ${sourceInfo.path}`
+      : "Loaded from an unspecified source.";
+  }
 
   function graphBounds(nodes) {
     return L.latLngBounds(nodes.map((node) => [node.y, node.x]));
@@ -237,6 +254,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     renderComparisonResults(result);
+    updateGraphSource(result.graph_source);
   }
 
   function drawGraph(graphData) {
@@ -259,13 +277,6 @@ document.addEventListener("DOMContentLoaded", () => {
         handleNodeSelection(node.id);
       });
 
-      marker.bindTooltip(node.id, {
-        permanent: true,
-        direction: "top",
-        className: "node-label",
-        offset: [0, -8],
-      });
-
       nodeMarkers.set(node.id, marker);
     });
 
@@ -283,9 +294,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const graphData = await response.json();
       drawGraph(graphData);
+      updateGraphSource(graphData.graph_source);
       refreshSidebarSelection();
       statusElement.textContent =
-        `Loaded ${graphData.nodes.length} nodes and ${graphData.edges.length} edges on the real map.`;
+        `Loaded ${graphData.nodes.length} nodes and ${graphData.edges.length} edges from ${graphData.graph_source?.label ?? "the active source"}.`;
     } catch (error) {
       console.error(error);
       statusElement.textContent =
@@ -318,7 +330,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         showSolvedRoute(payload);
         statusElement.textContent =
-          `Solved ${payload.cost_mode} route from ${payload.start} through ${payload.delivery_order.join(", ")}.`;
+          `Solved ${payload.cost_mode} route from ${payload.start} through ${payload.delivery_order.join(", ")} using ${payload.graph_source?.label ?? "the active source"}.`;
       })
       .catch((error) => {
         statusElement.textContent = `Could not solve route: ${error.message}`;

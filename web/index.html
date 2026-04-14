@@ -10,38 +10,13 @@
     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
     crossorigin=""
   >
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=3">
 </head>
 <body>
   <div class="page">
     <aside class="sidebar">
       <p class="eyebrow">Neighborhood Graph</p>
       <h1>Delivery Route Planner</h1>
-      <p class="summary">
-        This map is the first integration step between your Python search code and a browser UI.
-        It now renders your real neighborhood graph on top of a Leaflet basemap using the same
-        node and edge data your algorithms use.
-      </p>
-
-      <section class="panel">
-        <h2>What You’re Seeing</h2>
-        <ul>
-          <li>Blue circles are graph nodes.</li>
-          <li>Gray lines are road edges.</li>
-          <li>The labels match your Python node IDs.</li>
-          <li>Right now this is an abstract graph view, not a real street basemap yet.</li>
-        </ul>
-      </section>
-
-      <section class="panel">
-        <h2>Next Map Steps</h2>
-        <ul>
-          <li>Click a node to choose a start point.</li>
-          <li>Select delivery stops.</li>
-          <li>Send the selection to a Python solver endpoint.</li>
-          <li>Draw the returned route in a highlighted color.</li>
-        </ul>
-      </section>
 
       <section class="panel">
         <h2>Selection</h2>
@@ -73,6 +48,17 @@
         </div>
         <p class="selection-hint" id="selection-hint">
           Select a start node and at least one stop to prepare a route request.
+        </p>
+      </section>
+
+      <section class="panel">
+        <h2>Data Source</h2>
+        <p class="panel-copy">
+          Active graph source:
+          <span class="source-badge" id="graph-source-label">Loading...</span>
+        </p>
+        <p class="panel-copy" id="graph-source-path">
+          Waiting for graph metadata...
         </p>
       </section>
 
@@ -109,6 +95,6 @@
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
     crossorigin=""
   ></script>
-  <script src="app.js"></script>
+  <script src="app.js?v=3"></script>
 </body>
 </html>
